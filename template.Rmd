@@ -1,21 +1,133 @@
 ---
-title: "Simple document"
+title: "Data Import"
 output: html_document
 ---
 
-I'm an R Markdown document! 
-
-# Section 1
-
-Here's a **code chunk** that samples from 
-a _normal distribution_:
-
 ```{r}
-samp = rnorm(100)
-length(samp)
+library(tidyverse)
+library(readxl)
+library(haven)
 ```
 
-# Section 2
+Let's import a dataset.
 
-I can take the mean of the sample, too!
-The mean is `r mean(samp)`.
+```{r}
+litters_df = 
+  read_csv("data_import_examples/FAS_litters.csv")
+```
+
+Look at your dataset!
+
+```{r}
+names(litters_df)
+```
+
+update the names in `litters_df`
+
+```{r}
+litters_df =
+  janitor::clean_names(litters_df)
+```
+
+Look at the data!!!!
+
+```{r}
+litters_df
+```
+
+
+sometimes data skimming is neat?
+
+```{r}
+skimr::skim(litters_df)
+```
+
+
+##fix the missingness
+
+```{r}
+litters_df = 
+  read_csv("data_import_examples/FAS_litters.csv", na = c("NA", ".", ""))
+```
+
+##Import the Pups Data 
+
+```{r}
+pups_df =
+   read_csv("data_import_examples/FAS_pups.csv",skip = 3, na = c("NA", ".", ""))
+
+pups_df =
+  janitor::clean_names(pups_df)
+```
+
+## okay what about excel 
+
+csv's are really great but sometimes you get an excel file.
+
+```{r}
+mlb_df =
+  read_excel("data_import_examples/mlb11.xlsx")
+```
+
+Import LotR word counts.
+
+```{r}
+fotr_dr =
+  read_excel("data_import_examples/LotR_Words.xlsx", range = "B3:D6")
+```
+
+##SAS???????
+
+
+Import the PULSE data 
+
+```{r}
+pulse_df =
+  read_sas("data_import_examples/public_pulse_data.sas7bdat")
+
+pulse_df = 
+  janitor::clean_names(pulse_df)
+```
+
+
+## why do I had read.csv so much???
+
+```{r, eval = FALSE}
+litters_df_base =
+  read.csv("data_import_examples/FAS_litters.csv")
+
+```
+
+
+
+##what about data exporting?
+
+```{r}
+write_csv(Fot_df, "data_import_examples/fotr_df.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
