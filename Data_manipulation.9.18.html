@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Kennedy Wade" />
 
+<meta name="date" content="2025-09-18" />
 
-<title>Data Import</title>
+<title>data_manipulation_9.18</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -348,7 +350,9 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Data Import</h1>
+<h1 class="title toc-ignore">data_manipulation_9.18</h1>
+<h4 class="author">Kennedy Wade</h4>
+<h4 class="date">2025-09-18</h4>
 
 </div>
 
@@ -364,242 +368,9 @@ display: none;
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-<pre class="r"><code>library(readxl)
-library(haven)</code></pre>
-<p>Let’s import a dataset.</p>
+<p>lets import the datasets</p>
 <pre class="r"><code>litters_df = 
-  read_csv(&quot;data_import_examples/FAS_litters.csv&quot;)</code></pre>
-<pre><code>## Rows: 49 Columns: 8
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (4): Group, Litter Number, GD0 weight, GD18 weight
-## dbl (4): GD of Birth, Pups born alive, Pups dead @ birth, Pups survive
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<p>Look at your dataset!</p>
-<pre class="r"><code>names(litters_df)</code></pre>
-<pre><code>## [1] &quot;Group&quot;             &quot;Litter Number&quot;     &quot;GD0 weight&quot;       
-## [4] &quot;GD18 weight&quot;       &quot;GD of Birth&quot;       &quot;Pups born alive&quot;  
-## [7] &quot;Pups dead @ birth&quot; &quot;Pups survive&quot;</code></pre>
-<p>update the names in <code>litters_df</code></p>
-<pre class="r"><code>litters_df =
-  janitor::clean_names(litters_df)</code></pre>
-<p>Look at the data!!!!</p>
-<pre class="r"><code>litters_df</code></pre>
-<pre><code>## # A tibble: 49 × 8
-##    group litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
-##    &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;             &lt;dbl&gt;           &lt;dbl&gt;
-##  1 Con7  #85             19.7       34.7                 20               3
-##  2 Con7  #1/2/95/2       27         42                   19               8
-##  3 Con7  #5/5/3/83/3-3   26         41.4                 19               6
-##  4 Con7  #5/4/2/95/2     28.5       44.1                 19               5
-##  5 Con7  #4/2/95/3-3     &lt;NA&gt;       &lt;NA&gt;                 20               6
-##  6 Con7  #2/2/95/3-2     &lt;NA&gt;       &lt;NA&gt;                 20               6
-##  7 Con7  #1/5/3/83/3-3/2 &lt;NA&gt;       &lt;NA&gt;                 20               9
-##  8 Con8  #3/83/3-3       &lt;NA&gt;       &lt;NA&gt;                 20               9
-##  9 Con8  #2/95/3         &lt;NA&gt;       &lt;NA&gt;                 20               8
-## 10 Con8  #3/5/2/2/95     28.5       &lt;NA&gt;                 20               8
-## # ℹ 39 more rows
-## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
-<p>sometimes data skimming is neat?</p>
-<pre class="r"><code>skimr::skim(litters_df)</code></pre>
-<table>
-<caption>Data summary</caption>
-<tbody>
-<tr class="odd">
-<td align="left">Name</td>
-<td align="left">litters_df</td>
-</tr>
-<tr class="even">
-<td align="left">Number of rows</td>
-<td align="left">49</td>
-</tr>
-<tr class="odd">
-<td align="left">Number of columns</td>
-<td align="left">8</td>
-</tr>
-<tr class="even">
-<td align="left">_______________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Column type frequency:</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">character</td>
-<td align="left">4</td>
-</tr>
-<tr class="odd">
-<td align="left">numeric</td>
-<td align="left">4</td>
-</tr>
-<tr class="even">
-<td align="left">________________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Group variables</td>
-<td align="left">None</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: character</strong></p>
-<table>
-<colgroup>
-<col width="19%" />
-<col width="13%" />
-<col width="19%" />
-<col width="5%" />
-<col width="5%" />
-<col width="8%" />
-<col width="12%" />
-<col width="15%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">min</th>
-<th align="right">max</th>
-<th align="right">empty</th>
-<th align="right">n_unique</th>
-<th align="right">whitespace</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">group</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">4</td>
-<td align="right">4</td>
-<td align="right">0</td>
-<td align="right">6</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">litter_number</td>
-<td align="right">0</td>
-<td align="right">1.00</td>
-<td align="right">3</td>
-<td align="right">15</td>
-<td align="right">0</td>
-<td align="right">49</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">gd0_weight</td>
-<td align="right">13</td>
-<td align="right">0.73</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">0</td>
-<td align="right">26</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">gd18_weight</td>
-<td align="right">15</td>
-<td align="right">0.69</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">0</td>
-<td align="right">31</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: numeric</strong></p>
-<table>
-<colgroup>
-<col width="20%" />
-<col width="12%" />
-<col width="18%" />
-<col width="7%" />
-<col width="6%" />
-<col width="3%" />
-<col width="5%" />
-<col width="5%" />
-<col width="5%" />
-<col width="6%" />
-<col width="7%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">mean</th>
-<th align="right">sd</th>
-<th align="right">p0</th>
-<th align="right">p25</th>
-<th align="right">p50</th>
-<th align="right">p75</th>
-<th align="right">p100</th>
-<th align="left">hist</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">gd_of_birth</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">19.65</td>
-<td align="right">0.48</td>
-<td align="right">19</td>
-<td align="right">19</td>
-<td align="right">20</td>
-<td align="right">20</td>
-<td align="right">20</td>
-<td align="left">▅▁▁▁▇</td>
-</tr>
-<tr class="even">
-<td align="left">pups_born_alive</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">7.35</td>
-<td align="right">1.76</td>
-<td align="right">3</td>
-<td align="right">6</td>
-<td align="right">8</td>
-<td align="right">8</td>
-<td align="right">11</td>
-<td align="left">▁▃▂▇▁</td>
-</tr>
-<tr class="odd">
-<td align="left">pups_dead_birth</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0.33</td>
-<td align="right">0.75</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="left">▇▂▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">pups_survive</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">6.41</td>
-<td align="right">2.05</td>
-<td align="right">1</td>
-<td align="right">5</td>
-<td align="right">7</td>
-<td align="right">8</td>
-<td align="right">9</td>
-<td align="left">▁▃▂▇▇</td>
-</tr>
-</tbody>
-</table>
-<p>##fix the missingness</p>
-<pre class="r"><code>litters_df = 
-  read_csv(&quot;data_import_examples/FAS_litters.csv&quot;, na = c(&quot;NA&quot;, &quot;.&quot;, &quot;&quot;))</code></pre>
+    read_csv(&quot;./data_import_examples/FAS_litters.csv&quot;, na = c(&quot;NA&quot;, &quot;.&quot;, &quot;&quot;))</code></pre>
 <pre><code>## Rows: 49 Columns: 8
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -608,9 +379,11 @@ library(haven)</code></pre>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<p>##Import the Pups Data</p>
-<pre class="r"><code>pups_df =
-   read_csv(&quot;data_import_examples/FAS_pups.csv&quot;,skip = 3, na = c(&quot;NA&quot;, &quot;.&quot;, &quot;&quot;))</code></pre>
+<pre class="r"><code>litters_df = 
+    janitor::clean_names(litters_df)
+
+pups_df = 
+    read_csv(&quot;./data_import_examples/FAS_pups.csv&quot;, na = c(&quot;NA&quot;, &quot;.&quot;), skip = 3)</code></pre>
 <pre><code>## Rows: 313 Columns: 6
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -619,30 +392,380 @@ library(haven)</code></pre>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>pups_df =
-  janitor::clean_names(pups_df)</code></pre>
-<div id="okay-what-about-excel" class="section level2">
-<h2>okay what about excel</h2>
-<p>csv’s are really great but sometimes you get an excel file.</p>
-<pre class="r"><code>mlb_df =
-  read_excel(&quot;data_import_examples/mlb11.xlsx&quot;)</code></pre>
-<p>Import LotR word counts.</p>
-<pre class="r"><code>fotr_dr =
-  read_excel(&quot;data_import_examples/LotR_Words.xlsx&quot;, range = &quot;B3:D6&quot;)</code></pre>
-<p>##SAS???????</p>
-<p>Import the PULSE data</p>
-<pre class="r"><code>pulse_df =
-  read_sas(&quot;data_import_examples/public_pulse_data.sas7bdat&quot;)
-
-pulse_df = 
-  janitor::clean_names(pulse_df)</code></pre>
+<pre class="r"><code>pups_df = 
+    janitor::clean_names(pups_df)</code></pre>
+<div id="select" class="section level2">
+<h2><code>select</code></h2>
+<p><code>select</code> selects varibales from my dataframe</p>
+<pre class="r"><code>select(litters_df, group, litter_number, gd0_weight)</code></pre>
+<pre><code>## # A tibble: 49 × 3
+##    group litter_number   gd0_weight
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;
+##  1 Con7  #85                   19.7
+##  2 Con7  #1/2/95/2             27  
+##  3 Con7  #5/5/3/83/3-3         26  
+##  4 Con7  #5/4/2/95/2           28.5
+##  5 Con7  #4/2/95/3-3           NA  
+##  6 Con7  #2/2/95/3-2           NA  
+##  7 Con7  #1/5/3/83/3-3/2       NA  
+##  8 Con8  #3/83/3-3             NA  
+##  9 Con8  #2/95/3               NA  
+## 10 Con8  #3/5/2/2/95           28.5
+## # ℹ 39 more rows</code></pre>
+<p>select a range</p>
+<pre class="r"><code>select(litters_df, group:gd_of_birth)</code></pre>
+<pre><code>## # A tibble: 49 × 5
+##    group litter_number   gd0_weight gd18_weight gd_of_birth
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+##  1 Con7  #85                   19.7        34.7          20
+##  2 Con7  #1/2/95/2             27          42            19
+##  3 Con7  #5/5/3/83/3-3         26          41.4          19
+##  4 Con7  #5/4/2/95/2           28.5        44.1          19
+##  5 Con7  #4/2/95/3-3           NA          NA            20
+##  6 Con7  #2/2/95/3-2           NA          NA            20
+##  7 Con7  #1/5/3/83/3-3/2       NA          NA            20
+##  8 Con8  #3/83/3-3             NA          NA            20
+##  9 Con8  #2/95/3               NA          NA            20
+## 10 Con8  #3/5/2/2/95           28.5        NA            20
+## # ℹ 39 more rows</code></pre>
+<p>select by prefix</p>
+<pre class="r"><code>select(litters_df, group, starts_with(&quot;gd&quot;))</code></pre>
+<pre><code>## # A tibble: 49 × 4
+##    group gd0_weight gd18_weight gd_of_birth
+##    &lt;chr&gt;      &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+##  1 Con7        19.7        34.7          20
+##  2 Con7        27          42            19
+##  3 Con7        26          41.4          19
+##  4 Con7        28.5        44.1          19
+##  5 Con7        NA          NA            20
+##  6 Con7        NA          NA            20
+##  7 Con7        NA          NA            20
+##  8 Con8        NA          NA            20
+##  9 Con8        NA          NA            20
+## 10 Con8        28.5        NA            20
+## # ℹ 39 more rows</code></pre>
+<p>rearrange by selecting</p>
+<pre class="r"><code>select(litters_df, group, starts_with(&quot;gd&quot;), group)</code></pre>
+<pre><code>## # A tibble: 49 × 4
+##    group gd0_weight gd18_weight gd_of_birth
+##    &lt;chr&gt;      &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+##  1 Con7        19.7        34.7          20
+##  2 Con7        27          42            19
+##  3 Con7        26          41.4          19
+##  4 Con7        28.5        44.1          19
+##  5 Con7        NA          NA            20
+##  6 Con7        NA          NA            20
+##  7 Con7        NA          NA            20
+##  8 Con8        NA          NA            20
+##  9 Con8        NA          NA            20
+## 10 Con8        28.5        NA            20
+## # ℹ 39 more rows</code></pre>
+<pre class="r"><code>select(litters_df, group, litter_number, everything())</code></pre>
+<pre><code>## # A tibble: 49 × 8
+##    group litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                   19.7        34.7          20               3
+##  2 Con7  #1/2/95/2             27          42            19               8
+##  3 Con7  #5/5/3/83/3-3         26          41.4          19               6
+##  4 Con7  #5/4/2/95/2           28.5        44.1          19               5
+##  5 Con7  #4/2/95/3-3           NA          NA            20               6
+##  6 Con7  #2/2/95/3-2           NA          NA            20               6
+##  7 Con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  8 Con8  #3/83/3-3             NA          NA            20               9
+##  9 Con8  #2/95/3               NA          NA            20               8
+## 10 Con8  #3/5/2/2/95           28.5        NA            20               8
+## # ℹ 39 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<pre class="r"><code>relocate(litters_df, group, litter_number)</code></pre>
+<pre><code>## # A tibble: 49 × 8
+##    group litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                   19.7        34.7          20               3
+##  2 Con7  #1/2/95/2             27          42            19               8
+##  3 Con7  #5/5/3/83/3-3         26          41.4          19               6
+##  4 Con7  #5/4/2/95/2           28.5        44.1          19               5
+##  5 Con7  #4/2/95/3-3           NA          NA            20               6
+##  6 Con7  #2/2/95/3-2           NA          NA            20               6
+##  7 Con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  8 Con8  #3/83/3-3             NA          NA            20               9
+##  9 Con8  #2/95/3               NA          NA            20               8
+## 10 Con8  #3/5/2/2/95           28.5        NA            20               8
+## # ℹ 39 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<p>rename by selecting</p>
+<pre class="r"><code>select(litters_df,GROUP = group,everything())</code></pre>
+<pre><code>## # A tibble: 49 × 8
+##    GROUP litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                   19.7        34.7          20               3
+##  2 Con7  #1/2/95/2             27          42            19               8
+##  3 Con7  #5/5/3/83/3-3         26          41.4          19               6
+##  4 Con7  #5/4/2/95/2           28.5        44.1          19               5
+##  5 Con7  #4/2/95/3-3           NA          NA            20               6
+##  6 Con7  #2/2/95/3-2           NA          NA            20               6
+##  7 Con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  8 Con8  #3/83/3-3             NA          NA            20               9
+##  9 Con8  #2/95/3               NA          NA            20               8
+## 10 Con8  #3/5/2/2/95           28.5        NA            20               8
+## # ℹ 39 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<pre class="r"><code>rename(litters_df,GROUP = group)</code></pre>
+<pre><code>## # A tibble: 49 × 8
+##    GROUP litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                   19.7        34.7          20               3
+##  2 Con7  #1/2/95/2             27          42            19               8
+##  3 Con7  #5/5/3/83/3-3         26          41.4          19               6
+##  4 Con7  #5/4/2/95/2           28.5        44.1          19               5
+##  5 Con7  #4/2/95/3-3           NA          NA            20               6
+##  6 Con7  #2/2/95/3-2           NA          NA            20               6
+##  7 Con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  8 Con8  #3/83/3-3             NA          NA            20               9
+##  9 Con8  #2/95/3               NA          NA            20               8
+## 10 Con8  #3/5/2/2/95           28.5        NA            20               8
+## # ℹ 39 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<p>what if i only select one variable…?</p>
+<pre class="r"><code>select(litters_df, group)</code></pre>
+<pre><code>## # A tibble: 49 × 1
+##    group
+##    &lt;chr&gt;
+##  1 Con7 
+##  2 Con7 
+##  3 Con7 
+##  4 Con7 
+##  5 Con7 
+##  6 Con7 
+##  7 Con7 
+##  8 Con8 
+##  9 Con8 
+## 10 Con8 
+## # ℹ 39 more rows</code></pre>
+<pre class="r"><code>pull(litters_df,group)</code></pre>
+<pre><code>##  [1] &quot;Con7&quot; &quot;Con7&quot; &quot;Con7&quot; &quot;Con7&quot; &quot;Con7&quot; &quot;Con7&quot; &quot;Con7&quot; &quot;Con8&quot; &quot;Con8&quot; &quot;Con8&quot;
+## [11] &quot;Con8&quot; &quot;Con8&quot; &quot;Con8&quot; &quot;Con8&quot; &quot;Con8&quot; &quot;Mod7&quot; &quot;Mod7&quot; &quot;Mod7&quot; &quot;Mod7&quot; &quot;Mod7&quot;
+## [21] &quot;Mod7&quot; &quot;Mod7&quot; &quot;Mod7&quot; &quot;Mod7&quot; &quot;Mod7&quot; &quot;Mod7&quot; &quot;Mod7&quot; &quot;Low7&quot; &quot;Low7&quot; &quot;Low7&quot;
+## [31] &quot;Low7&quot; &quot;Low7&quot; &quot;Low7&quot; &quot;Low7&quot; &quot;Low7&quot; &quot;Mod8&quot; &quot;Mod8&quot; &quot;Mod8&quot; &quot;Mod8&quot; &quot;Mod8&quot;
+## [41] &quot;Mod8&quot; &quot;Mod8&quot; &quot;Low8&quot; &quot;Low8&quot; &quot;Low8&quot; &quot;Low8&quot; &quot;Low8&quot; &quot;Low8&quot; &quot;Low8&quot;</code></pre>
+<p>Learning assessment code</p>
+<pre class="r"><code>select(pups_df, litter_number, sex, pd_ears)</code></pre>
+<pre><code>## # A tibble: 313 × 3
+##    litter_number   sex pd_ears
+##    &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+##  1 #85               1       4
+##  2 #85               1       4
+##  3 #1/2/95/2         1       5
+##  4 #1/2/95/2         1       5
+##  5 #5/5/3/83/3-3     1       5
+##  6 #5/5/3/83/3-3     1       5
+##  7 #5/4/2/95/2       1      NA
+##  8 #4/2/95/3-3       1       4
+##  9 #4/2/95/3-3       1       4
+## 10 #2/2/95/3-2       1       4
+## # ℹ 303 more rows</code></pre>
 </div>
-<div id="why-do-i-had-read.csv-so-much" class="section level2">
-<h2>why do I had read.csv so much???</h2>
-<pre class="r"><code>litters_df_base =
-  read.csv(&quot;data_import_examples/FAS_litters.csv&quot;)</code></pre>
-<p>##what about data exporting?</p>
-<pre class="r"><code>write_csv(fotr_dr, &quot;data_import_examples/fotr_df.csv&quot;)</code></pre>
+<div id="filter" class="section level2">
+<h2>’filter`</h2>
+<p>use filter () to filter out rows</p>
+<pre class="r"><code>filter(litters_df,gd_of_birth ==20)</code></pre>
+<pre><code>## # A tibble: 32 × 8
+##    group litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                   19.7        34.7          20               3
+##  2 Con7  #4/2/95/3-3           NA          NA            20               6
+##  3 Con7  #2/2/95/3-2           NA          NA            20               6
+##  4 Con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  5 Con8  #3/83/3-3             NA          NA            20               9
+##  6 Con8  #2/95/3               NA          NA            20               8
+##  7 Con8  #3/5/2/2/95           28.5        NA            20               8
+##  8 Con8  #1/6/2/2/95-2         NA          NA            20               7
+##  9 Con8  #3/5/3/83/3-3-2       NA          NA            20               8
+## 10 Con8  #3/6/2/2/95-3         NA          NA            20               7
+## # ℹ 22 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<p>look for more than 5 pups alive</p>
+<pre class="r"><code>filter(litters_df, pups_born_alive &gt; 5)</code></pre>
+<pre><code>## # A tibble: 41 × 8
+##    group litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #1/2/95/2             27          42            19               8
+##  2 Con7  #5/5/3/83/3-3         26          41.4          19               6
+##  3 Con7  #4/2/95/3-3           NA          NA            20               6
+##  4 Con7  #2/2/95/3-2           NA          NA            20               6
+##  5 Con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  6 Con8  #3/83/3-3             NA          NA            20               9
+##  7 Con8  #2/95/3               NA          NA            20               8
+##  8 Con8  #3/5/2/2/95           28.5        NA            20               8
+##  9 Con8  #5/4/3/83/3           28          NA            19               9
+## 10 Con8  #1/6/2/2/95-2         NA          NA            20               7
+## # ℹ 31 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<pre class="r"><code>filter(litters_df, pups_born_alive &gt;= 5)</code></pre>
+<pre><code>## # A tibble: 46 × 8
+##    group litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #1/2/95/2             27          42            19               8
+##  2 Con7  #5/5/3/83/3-3         26          41.4          19               6
+##  3 Con7  #5/4/2/95/2           28.5        44.1          19               5
+##  4 Con7  #4/2/95/3-3           NA          NA            20               6
+##  5 Con7  #2/2/95/3-2           NA          NA            20               6
+##  6 Con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  7 Con8  #3/83/3-3             NA          NA            20               9
+##  8 Con8  #2/95/3               NA          NA            20               8
+##  9 Con8  #3/5/2/2/95           28.5        NA            20               8
+## 10 Con8  #5/4/3/83/3           28          NA            19               9
+## # ℹ 36 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<pre class="r"><code>filter(litters_df, pups_born_alive &lt;= 5)</code></pre>
+<pre><code>## # A tibble: 8 × 8
+##   group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
+##   &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+## 1 Con7  #85                 19.7        34.7          20               3
+## 2 Con7  #5/4/2/95/2         28.5        44.1          19               5
+## 3 Con8  #2/2/95/2           NA          NA            19               5
+## 4 Mod7  #3/82/3-2           28          45.9          20               5
+## 5 Mod7  #5/3/83/5-2         22.6        37            19               5
+## 6 Mod7  #106                21.7        37.8          20               5
+## 7 Low7  #111                25.5        44.6          20               3
+## 8 Low8  #4/84               21.8        35.2          20               4
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<p>look for non - matches</p>
+<pre class="r"><code>filter(litters_df, pups_born_alive != 6)</code></pre>
+<pre><code>## # A tibble: 43 × 8
+##    group litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                   19.7        34.7          20               3
+##  2 Con7  #1/2/95/2             27          42            19               8
+##  3 Con7  #5/4/2/95/2           28.5        44.1          19               5
+##  4 Con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  5 Con8  #3/83/3-3             NA          NA            20               9
+##  6 Con8  #2/95/3               NA          NA            20               8
+##  7 Con8  #3/5/2/2/95           28.5        NA            20               8
+##  8 Con8  #5/4/3/83/3           28          NA            19               9
+##  9 Con8  #1/6/2/2/95-2         NA          NA            20               7
+## 10 Con8  #3/5/3/83/3-3-2       NA          NA            20               8
+## # ℹ 33 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<p>filter out missing rows with <code>drop_na()</code></p>
+<pre class="r"><code>drop_na(litters_df)</code></pre>
+<pre><code>## # A tibble: 31 × 8
+##    group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                 19.7        34.7          20               3
+##  2 Con7  #1/2/95/2           27          42            19               8
+##  3 Con7  #5/5/3/83/3-3       26          41.4          19               6
+##  4 Con7  #5/4/2/95/2         28.5        44.1          19               5
+##  5 Mod7  #59                 17          33.4          19               8
+##  6 Mod7  #103                21.4        42.1          19               9
+##  7 Mod7  #3/82/3-2           28          45.9          20               5
+##  8 Mod7  #5/3/83/5-2         22.6        37            19               5
+##  9 Mod7  #106                21.7        37.8          20               5
+## 10 Mod7  #94/2               24.4        42.9          19               7
+## # ℹ 21 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<pre class="r"><code>drop_na(litters_df , gd0_weight)</code></pre>
+<pre><code>## # A tibble: 34 × 8
+##    group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                 19.7        34.7          20               3
+##  2 Con7  #1/2/95/2           27          42            19               8
+##  3 Con7  #5/5/3/83/3-3       26          41.4          19               6
+##  4 Con7  #5/4/2/95/2         28.5        44.1          19               5
+##  5 Con8  #3/5/2/2/95         28.5        NA            20               8
+##  6 Con8  #5/4/3/83/3         28          NA            19               9
+##  7 Mod7  #59                 17          33.4          19               8
+##  8 Mod7  #103                21.4        42.1          19               9
+##  9 Mod7  #3/82/3-2           28          45.9          20               5
+## 10 Mod7  #4/2/95/2           23.5        NA            19               9
+## # ℹ 24 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<p>Learning assessment 2</p>
+<pre class="r"><code>filter(pups_df, sex == 1)</code></pre>
+<pre><code>## # A tibble: 155 × 6
+##    litter_number   sex pd_ears pd_eyes pd_pivot pd_walk
+##    &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+##  1 #85               1       4      13        7      11
+##  2 #85               1       4      13        7      12
+##  3 #1/2/95/2         1       5      13        7       9
+##  4 #1/2/95/2         1       5      13        8      10
+##  5 #5/5/3/83/3-3     1       5      13        8      10
+##  6 #5/5/3/83/3-3     1       5      14        6       9
+##  7 #5/4/2/95/2       1      NA      14        5       9
+##  8 #4/2/95/3-3       1       4      13        6       8
+##  9 #4/2/95/3-3       1       4      13        7       9
+## 10 #2/2/95/3-2       1       4      NA        8      10
+## # ℹ 145 more rows</code></pre>
+<pre class="r"><code>filter(pups_df, sex == 2, pd_walk &lt; 11)</code></pre>
+<pre><code>## # A tibble: 127 × 6
+##    litter_number   sex pd_ears pd_eyes pd_pivot pd_walk
+##    &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+##  1 #1/2/95/2         2       4      13        7       9
+##  2 #1/2/95/2         2       4      13        7      10
+##  3 #1/2/95/2         2       5      13        8      10
+##  4 #1/2/95/2         2       5      13        8      10
+##  5 #1/2/95/2         2       5      13        6      10
+##  6 #5/5/3/83/3-3     2       5      13        8      10
+##  7 #5/5/3/83/3-3     2       5      14        7      10
+##  8 #5/5/3/83/3-3     2       5      14        8      10
+##  9 #5/4/2/95/2       2      NA      14        7      10
+## 10 #5/4/2/95/2       2      NA      14        7      10
+## # ℹ 117 more rows</code></pre>
+<p>##<code>mutate</code></p>
+<p>use <code>mutate()</code> to create or modify variables.</p>
+<pre class="r"><code>mutate(litters_df,
+  wt_gain = gd18_weight - gd0_weight,
+  group = str_to_lower(group)
+)</code></pre>
+<pre><code>## # A tibble: 49 × 9
+##    group litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 con7  #85                   19.7        34.7          20               3
+##  2 con7  #1/2/95/2             27          42            19               8
+##  3 con7  #5/5/3/83/3-3         26          41.4          19               6
+##  4 con7  #5/4/2/95/2           28.5        44.1          19               5
+##  5 con7  #4/2/95/3-3           NA          NA            20               6
+##  6 con7  #2/2/95/3-2           NA          NA            20               6
+##  7 con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  8 con8  #3/83/3-3             NA          NA            20               9
+##  9 con8  #2/95/3               NA          NA            20               8
+## 10 con8  #3/5/2/2/95           28.5        NA            20               8
+## # ℹ 39 more rows
+## # ℹ 3 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;, wt_gain &lt;dbl&gt;</code></pre>
+</div>
+<div id="arrange" class="section level2">
+<h2><code>arrange</code></h2>
+<pre class="r"><code>arrange(litters_df, pups_born_alive)</code></pre>
+<pre><code>## # A tibble: 49 × 8
+##    group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                 19.7        34.7          20               3
+##  2 Low7  #111                25.5        44.6          20               3
+##  3 Low8  #4/84               21.8        35.2          20               4
+##  4 Con7  #5/4/2/95/2         28.5        44.1          19               5
+##  5 Con8  #2/2/95/2           NA          NA            19               5
+##  6 Mod7  #3/82/3-2           28          45.9          20               5
+##  7 Mod7  #5/3/83/5-2         22.6        37            19               5
+##  8 Mod7  #106                21.7        37.8          20               5
+##  9 Con7  #5/5/3/83/3-3       26          41.4          19               6
+## 10 Con7  #4/2/95/3-3         NA          NA            20               6
+## # ℹ 39 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
+<pre class="r"><code>arrange(litters_df, group, pups_born_alive)</code></pre>
+<pre><code>## # A tibble: 49 × 8
+##    group litter_number   gd0_weight gd18_weight gd_of_birth pups_born_alive
+##    &lt;chr&gt; &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Con7  #85                   19.7        34.7          20               3
+##  2 Con7  #5/4/2/95/2           28.5        44.1          19               5
+##  3 Con7  #5/5/3/83/3-3         26          41.4          19               6
+##  4 Con7  #4/2/95/3-3           NA          NA            20               6
+##  5 Con7  #2/2/95/3-2           NA          NA            20               6
+##  6 Con7  #1/2/95/2             27          42            19               8
+##  7 Con7  #1/5/3/83/3-3/2       NA          NA            20               9
+##  8 Con8  #2/2/95/2             NA          NA            19               5
+##  9 Con8  #1/6/2/2/95-2         NA          NA            20               7
+## 10 Con8  #3/6/2/2/95-3         NA          NA            20               7
+## # ℹ 39 more rows
+## # ℹ 2 more variables: pups_dead_birth &lt;dbl&gt;, pups_survive &lt;dbl&gt;</code></pre>
 </div>
 
 

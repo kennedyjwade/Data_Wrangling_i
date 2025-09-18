@@ -103,31 +103,5 @@ litters_df_base =
 ##what about data exporting?
 
 ```{r}
-write_csv(Fot_df, "data_import_examples/fotr_df.csv")
+write_csv(fotr_dr, "data_import_examples/fotr_df.csv")
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
