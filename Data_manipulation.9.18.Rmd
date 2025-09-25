@@ -2,7 +2,7 @@
 title: "data_manipulation_9.18"
 author: "Kennedy Wade"
 date: "2025-09-18"
-output: html_document
+output: github_document
 ---
 
 ```{r}
